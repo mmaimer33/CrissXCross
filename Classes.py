@@ -71,6 +71,16 @@ class Rack:
             self.add_tile()
 
 
+class Word:
+
+    def __init__(self, word, location, orientation) -> None:
+        self.word = word
+        self.location = location
+        self.orientation = orientation
+    
+    def validate_word(self):
+        pass
+
 # class Board:
 
 #     def __init__(self) -> None:
