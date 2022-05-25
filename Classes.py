@@ -73,15 +73,30 @@ class Rack:
 
 class Word:
 
-    def __init__(self, word, location, orientation) -> None:
+    def __init__(self, word, location, orientation, board) -> None:
         self.word = word
         self.location = location
         self.orientation = orientation
+        self.board = board
     
     def validate_word(self):
         pass
 
-# class Board:
+class Board:
 
-#     def __init__(self) -> None:
-#         self.board = [[" " for j in range(15)] for i in range(15)]
+    def __init__(self) -> None:
+        self.board = [[' ' for j in range(15)] for i in range(15)]
+        self.board[7][7] = '*'
+    
+    def print_board(self):
+        board_str = "   |  " + "  |  ".join(str(item) for item in range(10)) + "  | " + "  | ".join(str(item) for item in range(10, 15)) + " |"
+        board_str += "\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n"
+        board = list(self.board)
+        for i in range(len(board)):
+            if i < 10:
+                board[i] = str(i) + "  | " + " | ".join(str(item) for item in board[i]) + " |"
+            if i >= 10:
+                board[i] = str(i) + " | " + " | ".join(str(item) for item in board[i]) + " |"
+        board_str += "\n   |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n".join(board)
+        board_str += "\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"
+        return board_str
