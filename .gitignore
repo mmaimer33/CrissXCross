@@ -131,3 +131,4 @@ cython_debug/
 
 # Our files
 test.py
+crissxcross.db-journal

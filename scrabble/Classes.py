@@ -1,4 +1,5 @@
 from random import shuffle
+from scrabble.Values import *
 
 """
 Scrabble Game
@@ -10,33 +11,6 @@ Word - checks the validity of a word and its placement
 Board - keeps track of the tiles' location on the board
 """
 #Keeps track of the score-worth of each letter-tile.
-LETTER_VALUES = {"A": 1,
-                 "B": 3,
-                 "C": 3,
-                 "D": 2,
-                 "E": 1,
-                 "F": 4,
-                 "G": 2,
-                 "H": 4,
-                 "I": 1,
-                 "J": 1,
-                 "K": 5,
-                 "L": 1,
-                 "M": 3,
-                 "N": 1,
-                 "O": 1,
-                 "P": 3,
-                 "Q": 10,
-                 "R": 1,
-                 "S": 1,
-                 "T": 1,
-                 "U": 1,
-                 "V": 4,
-                 "W": 4,
-                 "X": 8,
-                 "Y": 4,
-                 "Z": 10,
-                 "#": 0}
 
 class Tile:
     """
@@ -78,33 +52,8 @@ class Bag:
     def initialize_bag(self):
         #Adds the intiial 100 tiles to the bag.
         global LETTER_VALUES
-        self.add_to_bag(Tile("A", LETTER_VALUES), 9)
-        self.add_to_bag(Tile("B", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("C", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("D", LETTER_VALUES), 4)
-        self.add_to_bag(Tile("E", LETTER_VALUES), 12)
-        self.add_to_bag(Tile("F", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("G", LETTER_VALUES), 3)
-        self.add_to_bag(Tile("H", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("I", LETTER_VALUES), 9)
-        self.add_to_bag(Tile("J", LETTER_VALUES), 9)
-        self.add_to_bag(Tile("K", LETTER_VALUES), 1)
-        self.add_to_bag(Tile("L", LETTER_VALUES), 4)
-        self.add_to_bag(Tile("M", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("N", LETTER_VALUES), 6)
-        self.add_to_bag(Tile("O", LETTER_VALUES), 8)
-        self.add_to_bag(Tile("P", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("Q", LETTER_VALUES), 1)
-        self.add_to_bag(Tile("R", LETTER_VALUES), 6)
-        self.add_to_bag(Tile("S", LETTER_VALUES), 4)
-        self.add_to_bag(Tile("T", LETTER_VALUES), 6)
-        self.add_to_bag(Tile("U", LETTER_VALUES), 4)
-        self.add_to_bag(Tile("V", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("W", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("X", LETTER_VALUES), 1)
-        self.add_to_bag(Tile("Y", LETTER_VALUES), 2)
-        self.add_to_bag(Tile("Z", LETTER_VALUES), 1)
-        self.add_to_bag(Tile("#", LETTER_VALUES), 2)
+        for letter in LETTER_COUNTS.keys():
+            self.add_to_bag(Tile(letter, LETTER_VALUES), LETTER_COUNTS[letter])
         shuffle(self.bag)
 
     def take_from_bag(self):
@@ -277,7 +226,10 @@ class Word:
         word_score = 0
         global dictionary 
         if "dictionary" not in globals():
-            dictionary = open("word_list.txt").read().splitlines()
+            try:
+                dictionary = open("word_list.txt").read().splitlines()
+            except:
+                dictionary = open("scrabble/word_list.txt").read().splitlines()
 
         current_board_ltr = ""
         needed_tiles = ""
@@ -383,6 +335,14 @@ class Word:
     def get_word(self):
         return self.word
 
+def turn_display(round, player: Player, board: Board):
+    # turn(current_player, board, bag)
+    return {
+        "board": board.get_board(),
+        "round": f"Round {str(round)}: {player.get_name()}'s turn",
+        "rack": f"{player.get_name()}'s letter rack: {player.get_rack_str()}"
+    }
+
 def turn(player, board, bag):
     #Begins a turn, by displaying the current board, getting the information to play a turn, and creates a recursive loop to allow the next person to play.
     global round_number, players, skipped_turns
@@ -454,28 +414,25 @@ def turn(player, board, bag):
     else:
         end_game()
 
-def start_game():
+def start_game(num_of_players, player_names):
     #Begins the game and calls the turn function.
     global round_number, players, skipped_turns
     board = Board()
     bag = Bag()
 
-    #Asks the player for the number of players.
-    num_of_players = int(input("\nPlease enter the number of players (2-4): "))
-    while num_of_players < 2 or num_of_players > 4:
-        num_of_players = int(input("This number is invalid. Please enter the number of players (2-4): "))
-
-    #Welcomes players to the game and allows players to choose their name.
-    print("\nWelcome to Scrabble! Please enter the names of the players below.")
+    #Number of players skipped
+    #Names provided by function
+    # print("\nWelcome to Scrabble! Please enter the names of the players below.")
     players = []
     for i in range(num_of_players):
         players.append(Player(bag))
-        players[i].set_name(input("Please enter player " + str(i+1) + "'s name: "))
+        players[i].set_name(player_names[i])
 
     #Sets the default value of global variables.
     round_number = 1
     skipped_turns = 0
     current_player = players[0]
+    return turn_display(round_number, current_player, board)
     turn(current_player, board, bag)
 
 def end_game():
@@ -487,9 +444,12 @@ def end_game():
         if player.get_score > highest_score:
             highest_score = player.get_score()
             winning_player = player.get_name()
-    print("The game is over! " + winning_player + ", you have won!")
+    # print("The game is over! " + winning_player + ", you have won!")
+    return {
+        "winner": winning_player,
+        "win_score": highest_score,
+        "players": players
+        }
 
-    if input("\nWould you like to play again? (y/n)").upper() == "Y":
-        start_game()
-
-start_game()
+    # if input("\nWould you like to play again? (y/n)").upper() == "Y":
+    #     start_game()
