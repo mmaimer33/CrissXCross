@@ -32,7 +32,12 @@ db = SQL("sqlite:///crissxcross.db")
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if session:
+        user_id = session["user_id"]
+        username = db.execute("SELECT username FROM Users WHERE id = :user_id", user_id = user_id)[0]["username"]
+        return render_template("index.html", username=username)
+    else:
+        return render_template("index.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -116,10 +121,6 @@ def login():
 def logout():
     session.clear()
     return redirect("/")
-
-@app.route("/start")
-def start():
-    pass
 
 if __name__ == "__main__":
     app.run()
