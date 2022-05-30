@@ -15,12 +15,33 @@ function App() {
 
   }, [])
 
+  class testForm extends React.Component {
+    render() {
+      return (
+        <div>
+          <h3>Add task</h3>
+          <form>
+            <label>
+              Task
+              <input style={{ margin: "0 1rem" }} type="text" value={""} />
+            </label>
+          </form>
+        </div>
+      )
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <p>React + Flask Tutorial</p>
+        <h2>CrissXCross</h2>
         <div>{data.status === 200 ? 
-          <h3>{data.data.message}</h3>
+          <div>
+            <h3>{data.data.messages.map(
+              message => <p>{message}</p>
+            )}</h3>
+            <testForm>{testForm}</testForm>
+          </div>
           :
           <h3>LOADING</h3>}</div>
       </header>
