@@ -13,17 +13,14 @@ Board - keeps track of the tiles' location on the board
 #Keeps track of the score-worth of each letter-tile.
 
 class Tile:
-    """
-    Class that allows for the creation of a tile. Initializes using an uppercase string of one letter,
-    and an integer representing that letter's score.
-    """
-    def __init__(self, letter, letter_values):
-        #Initializes the tile class. Takes the letter as a string, and the dictionary of letter values as arguments.
+
+    # Representation of a Tile, initialised with a character
+    def __init__(self, letter: str):
         self.letter = letter.upper()
-        if self.letter in letter_values:
-            self.score = letter_values[self.letter]
+        if self.letter in LETTER_VALUES:
+            self.score = LETTER_VALUES[self.letter]
         else:
-            self.score = 0
+            print("Error: invalid Tile character")
 
     def get_letter(self):
         #Returns the tile's letter (string).
@@ -44,16 +41,17 @@ class Bag:
         self.bag = []
         self.initialize_bag()
 
-    def add_to_bag(self, tile, quantity):
+    def add_to_bag(self, tile: Tile, quantity: int):
         #Adds a certain quantity of a certain tile to the bag. Takes a tile and an integer quantity as arguments.
         for i in range(quantity):
             self.bag.append(tile)
 
     def initialize_bag(self):
         #Adds the intiial 100 tiles to the bag.
-        global LETTER_VALUES
+
         for letter in LETTER_COUNTS.keys():
-            self.add_to_bag(Tile(letter, LETTER_VALUES), LETTER_COUNTS[letter])
+            self.add_to_bag(Tile(letter), LETTER_COUNTS[letter])
+
         shuffle(self.bag)
 
     def take_from_bag(self):
@@ -108,14 +106,14 @@ class Player:
     """
     Creates an instance of a player. Initializes the player's rack, and allows you to set/get a player name.
     """
-    def __init__(self, bag: Bag):
+    def __init__(self, bag):
         #Intializes a player instance. Creates the player's rack by creating an instance of that class.
         #Takes the bag as an argument, in order to create the rack.
         self.name = ""
         self.rack = Rack(bag)
         self.score = 0
 
-    def set_name(self, name: str):
+    def set_name(self, name):
         #Sets the player's name.
         self.name = name
 
@@ -131,9 +129,9 @@ class Player:
         #Returns the player's rack in the form of an array.
         return self.rack.get_rack_arr()
 
-    def increase_score(self, amount: int):
+    def increase_score(self, increase):
         #Increases the player's score by a certain amount. Takes the increase (int) as an argument and adds it to the score.
-        self.score += amount
+        self.score += increase
 
     def get_score(self):
         #Returns the player's score
@@ -179,7 +177,7 @@ class Board:
         for coordinate in DOUBLE_LETTER_SCORE:
             self.board[coordinate[0]][coordinate[1]] = "DLS"
 
-    def place_word(self, word: str, location, direction: str, player: Player):
+    def place_word(self, word, location, direction, player):
         #Allows you to play words, assuming that they have already been confirmed as valid.
         global premium_spots
         premium_spots = []
@@ -212,7 +210,7 @@ class Board:
         return self.board
 
 class Word:
-    def __init__(self, word: str, location, player: Player, direction: str, board: Board):
+    def __init__(self, word, location, player, direction, board):
         self.word = word.upper()
         self.location = location
         self.player = player
@@ -226,10 +224,7 @@ class Word:
         word_score = 0
         global dictionary 
         if "dictionary" not in globals():
-            try:
-                dictionary = open("word_list.txt").read().splitlines()
-            except:
-                dictionary = open("scrabble/word_list.txt").read().splitlines()
+            dictionary = open("dic.txt").read().splitlines()
 
         current_board_ltr = ""
         needed_tiles = ""
@@ -260,7 +255,7 @@ class Word:
             else:
                 return "Error: please enter a valid direction."
 
-            #Raises an error if the word being played is not in the official scrabble dictionary.
+            #Raises an error if the word being played is not in the official scrabble dictionary (dic.txt).
             if self.word not in dictionary:
                 return "Please enter a valid dictionary word.\n"
 
@@ -323,27 +318,19 @@ class Word:
                 word_score *= 2
         self.player.increase_score(word_score)
 
-    def set_word(self, word: str):
+    def set_word(self, word):
         self.word = word.upper()
 
     def set_location(self, location):
         self.location = location
 
-    def set_direction(self, direction: str):
+    def set_direction(self, direction):
         self.direction = direction
 
     def get_word(self):
         return self.word
 
-def turn_display(round, player: Player, board: Board):
-    # turn(current_player, board, bag)
-    return {
-        "board": board.get_board(),
-        "round": f"Round {str(round)}: {player.get_name()}'s turn",
-        "rack": f"{player.get_name()}'s letter rack: {player.get_rack_str()}"
-    }
-
-def turn(player: Player, board: Board, bag: Bag):
+def turn(player, board, bag):
     #Begins a turn, by displaying the current board, getting the information to play a turn, and creates a recursive loop to allow the next person to play.
     global round_number, players, skipped_turns
 
@@ -420,19 +407,22 @@ def start_game():
     board = Board()
     bag = Bag()
 
-    #Number of players skipped
-    #Names provided by function
+    #Asks the player for the number of players.
+    num_of_players = int(input("\nPlease enter the number of players (2-4): "))
+    while num_of_players < 2 or num_of_players > 4:
+        num_of_players = int(input("This number is invalid. Please enter the number of players (2-4): "))
+
+    #Welcomes players to the game and allows players to choose their name.
     print("\nWelcome to Scrabble! Please enter the names of the players below.")
     players = []
     for i in range(num_of_players):
         players.append(Player(bag))
-        players[i].set_name(player_names[i])
+        players[i].set_name(input("Please enter player " + str(i+1) + "'s name: "))
 
     #Sets the default value of global variables.
     round_number = 1
     skipped_turns = 0
     current_player = players[0]
-    # return turn_display(round_number, current_player, board)
     turn(current_player, board, bag)
 
 def end_game():
@@ -445,11 +435,6 @@ def end_game():
             highest_score = player.get_score()
             winning_player = player.get_name()
     print("The game is over! " + winning_player + ", you have won!")
-    # return {
-    #     "winner": winning_player,
-    #     "win_score": highest_score,
-    #     "players": players
-    #     }
 
     if input("\nWould you like to play again? (y/n)").upper() == "Y":
         start_game()
