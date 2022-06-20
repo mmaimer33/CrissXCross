@@ -31,6 +31,10 @@ Session(app)
 db = SQL("sqlite:///crissxcross.db")
 
 @app.route("/")
+def home():
+    return render_template("home.html")
+
+@app.route("/main")
 def index():
     if session:
         user_id = session["user_id"]

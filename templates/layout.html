@@ -17,13 +17,19 @@
 
         <title>CrissXCross: {% block title %}{% endblock %}</title>
 
+        {% block style %}{% endblock %}
+    
     </head>
 
     <body>
 
+        {% block body %}{% endblock %}
+        
         <main class="container p-5">
             {% block main %}{% endblock %}
         </main>
+
+            
 
         <footer class="small text-center text-muted">
             By CrissXCross: Denzel Chen and Rishi Chousalkar

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<title>Home</title>
+
+<style>
+    body, html{
+       /* background-color: turquoise;*/
+        height: 100%;
+        
+    }  
+    @keyframes fadeInAnimation {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    
+    img {
+        position: relative;
+        max-width: 18%;
+        top: 60%;
+        right: 60%;
+        left:40%;
+        animation-delay: 2s;
+        animation: fadeInAnimation 3s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
+    .bg {
+        background-image: url('../static/logo.jpg');
+        background-color: white;
+        height: 100%; 
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        animation: fadeInAnimation ease 3s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
+    .bottomleft {
+        position: relative;
+        width:30%;
+        top: 30%;
+        left: 8%;
+        word-break: keep-all; 
+        font-size: 3vw;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;  
+    }
+    .credits {
+        position: relative;
+        width:30%;
+        top: 34%;
+        left: 65%;
+        word-break: keep-all; 
+        font-size: 1.5vw;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;  
+    }
+
+</style>
+
+<body>
+
+<div class = "bg">
+
+<a href = "main">
+    <img src = "../static/play-button-pic.png" alt = "Play button">
+</a>
+<div class = "bottomleft">
+   <strong>Press the play button to begin!</strong>
+</div>
+<div class = "credits">
+    <strong>By: Denzel Chen & Rishi Chousalkar</strong>
+</div>
+
+</body>
