@@ -14,12 +14,13 @@ from scrabble.Values import *
 from dotenv import load_dotenv
 load_dotenv()
 import os
+#import magic
 
 # if "dictionary" not in globals():
 #     dictionary = open("scrabble/word_list.txt").read().splitlines()
 
 app = Flask(__name__)
-
+mail = Mail(app)
 app.config['MAIL_SERVER']='smtp-mail.outlook.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USERNAME'] = 'crissxcross2022@hotmail.com'
@@ -177,14 +178,16 @@ def contactus():
         email = request.form.get("email")
         subject = request.form.get("subject")
         feedback = request.form.get("feedback")
-        files = request.form.get("files")
+        files = request.files.get("uploaded_file")
         msg = Message("Feedback", sender="crissxcross2022@hotmail.com",  recipients=["crissxcross2022@hotmail.com"])
-        msg.body = "This is the recent feedback that we received from "+full_name+"with username @"+username+"regarding "+subject
-        msg.html = feedback
-        # with app.open_resource(files) as fp:  
-        # msg.attach(files, "application/pdf", fp.read())
+        msg.html = "This is the feedback we received from the following user: <br><br> Full name: <strong>{}</strong> <br><br> Username: <strong>{}</strong> <br><br> Email: <strong>{}</strong> <br><br> Subject: <strong>{}</strong> <br><br> Message: {}".format(full_name,username,email,subject,feedback)
+  
+        # mime = magic.from_file(files, mime=True)
+        
+        # with open(files,'rb') as f:
+        #         msg.attach(filename=file_name, content_type=mime, data=f.read(), disposition=None, headers=None) 
         mail.send(msg)
-        return "Sent feedback!"  
+        return render_template("form-submit.html")  
     else:
         return render_template("contact-us.html")
 

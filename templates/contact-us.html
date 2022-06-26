@@ -14,7 +14,7 @@ Register
 
 {% block main %}
 
-<form action ="/contact-us" method = "POST">
+<form action ="/contact-us" method = "POST" enctype="multipart/form-data">
 
     <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Full name:</label>
@@ -33,19 +33,19 @@ Register
     </div>
     
     <div class="form-check form-check-inline">
-        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio1" value="option1">
+        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio1" value="Comments">
         <label class="form-check-label" for="inlineRadio1">Comments</label>
     </div>
     <div class="form-check form-check-inline">
-    <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio2" value="option2">
+    <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio2" value="Questions">
         <label class="form-check-label" for="inlineRadio2">Questions</label>
     </div>
     <div class="form-check form-check-inline">
-        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio3" value="option3">
+        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio3" value="Bug Report">
         <label class="form-check-label" for="inlineRadio3">Bug Report</label>
     </div>  
     <div class="form-check form-check-inline">
-        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio3" value="option4">
+        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio3" value="Others">
         <label class="form-check-label" for="inlineRadio3">Others</label>
     </div>  
     <div class="mb-3">
@@ -56,7 +56,7 @@ Register
     <div class="mb-3">
         <br>
         <label for="formFile" class="form-label">Attach any relevant files:</label>
-        <input class="form-control" type="file" id="formFile" name = "files">
+        <input class="form-control" type="file" id="formFile" name = "uploaded_file">
     </div>
     <br>
     <button class="btn btn-primary" type="submit">Submit Feedback</button> 
