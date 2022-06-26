@@ -1,5 +1,8 @@
+from re import sub
 from cs50 import SQL
 from flask import Flask, redirect, render_template, request, session
+from flask_mail import Mail, Message
+
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -8,10 +11,22 @@ from helpers import *
 from scrabble.Classes import *
 from scrabble.Values import *
 
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
 # if "dictionary" not in globals():
 #     dictionary = open("scrabble/word_list.txt").read().splitlines()
 
 app = Flask(__name__)
+
+app.config['MAIL_SERVER']='smtp-mail.outlook.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 'crissxcross2022@hotmail.com'
+app.config['MAIL_PASSWORD'] = os.getenv("PASSWORD")
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+mail = Mail(app)
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -52,29 +67,29 @@ def register():
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return errorify("must provide username", 403)
+            return errorify("must provide username", "", 403)
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return errorify("must provide password", 403)
+            return errorify("must provide password", "", 403)
 
         # Ensure password has at least 6 characters
         if len(request.form.get("password")) < 6:
-            return errorify("password must have at least 6 characters", 403)
+            return errorify("password must have at least 6 characters", "", 403)
 
         # Ensure password has a number
         if not has_number(request.form.get("password")):
-            return errorify("password must have a number", 403)
+            return errorify("password must have a number", "", 403)
 
         # Ensure confirmation matches password
         elif request.form.get("password") != request.form.get("confirmation"):
-            return errorify("passwords do not match", 403)
+            return errorify("passwords do not match", "", 403)
 
         # Ensure that username does not already exist
         rows = db.execute("SELECT * FROM Users WHERE username = :username",
                           username=request.form.get("username"))
         if len(rows) != 0:
-            return errorify("username already exists", 403)
+            return errorify("username already exists", "", 403)
 
         # Insert username and password hash
         db.execute("INSERT INTO Users (username, hash) VALUES(?, ?)", request.form.get("username"), generate_password_hash(request.form.get("password")))
@@ -86,7 +101,7 @@ def register():
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/main")
     else:
         return render_template("register.html")
 
@@ -99,11 +114,11 @@ def login():
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return errorify("must provide username", 403)
+            return errorify("must provide username", "invalidlogin", 403)
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return errorify("must provide password", 403)
+            return errorify("must provide password", "invalidlogin", 403)
 
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = :username",
@@ -111,24 +126,69 @@ def login():
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return errorify("invalid username and/or password", 403)
+            return errorify("invalid username and/or password", "invalidlogin", 403)
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/main")
     else:
         return render_template("login.html")
 
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("/")
+    return redirect("/main")
 
 @app.route("/test")
 def test():
     return render_template("test.html")
+
+@app.route("/why-crissxcross")
+def whycrissxcross():
+    return render_template("why-crissxcross.html")
+
+@app.route("/what-is-scrabble")
+def whatisscrabble():
+    return render_template("what-is-scrabble.html")
+
+@app.route("/gameplay-tutorial")
+def gameplaytutorial():
+    return render_template("gameplay-tutorial.html")
+
+@app.route("/multiplayer-gameplay")
+def multiplayergameplay():
+    return render_template("multiplayer-gameplay.html")
+
+@app.route("/wordoftheday")
+def wordoftheday():
+    return render_template("wordoftheday.html")
+
+@app.route("/contact-us", methods=["GET", "POST"])
+def contactus():
+    # Forgets any current user
+    session.clear()
+
+    if request.method == "POST":
+
+        full_name = request.form.get("full_name")
+        username = request.form.get("username")
+        email = request.form.get("email")
+        subject = request.form.get("subject")
+        feedback = request.form.get("feedback")
+        files = request.form.get("files")
+        msg = Message("Feedback", sender="crissxcross2022@hotmail.com",  recipients=["crissxcross2022@hotmail.com"])
+        msg.body = "This is the recent feedback that we received from "+full_name+"with username @"+username+"regarding "+subject
+        msg.html = feedback
+        # with app.open_resource(files) as fp:  
+        # msg.attach(files, "application/pdf", fp.read())
+        mail.send(msg)
+        return "Sent feedback!"  
+    else:
+        return render_template("contact-us.html")
+
+     
 
 if __name__ == "__main__":
     app.run()
