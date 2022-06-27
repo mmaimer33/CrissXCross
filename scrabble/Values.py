@@ -1,4 +1,5 @@
 import enum
+import numpy
 
 LETTER_SCORES = {
     "A": 1,
@@ -70,3 +71,5 @@ DOUBLE_LETTER_SCORE = ((0, 3), (0,11), (2,6), (2,8), (3,0), (3,7), (3,14), (6,2)
 class Direction(enum.Enum):
     right = 1
     down = 2
+
+DICTIONARY = numpy.loadtxt("scrabble/word_list.txt", dtype='str')

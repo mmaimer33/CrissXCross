@@ -15,8 +15,8 @@ def errorify(message, error, code=400):
         return s
     if error == "invalidlogin" :
         return render_template("login.html", top=code, alertmsg=escape(message)) # im not sure if this messes it up by rendering login.html
-    else : 
-        return render_template("register.html", top=code, alertmsg=escape(message))
+    else: 
+        return render_template("error.html", top=code, alertmsg=escape(message))
     
 
 def login_required(f):
