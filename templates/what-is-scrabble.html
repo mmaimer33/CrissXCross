@@ -1,1 +1,86 @@
 {% extends "layout.html" %}
+
+{% block title %}
+What is Scrabble?
+{% endblock %}
+
+{% block style %}
+<style>
+.card-title{
+    text-align:center;
+    font-weight: bold;
+    text-decoration: underline;
+
+}
+.card-body{
+    background-color: #D5E2FF;
+}
+
+</style>
+{% endblock %}
+{% block body %}
+<h2 style = "text-align: center; margin-top: 2%;"><mark>What is Scrabble?</mark></h2>
+<br><br><br>
+
+<div class="card-group">
+    <div class="card">
+        <img src="../static/letter S.jpg" class="card-img-top" alt="letter s" style = "background-color: papayawhip;">
+        <div class="card-body">
+            <h5 class="card-title">Simple</h5>
+            <p class="card-text">Word game where 2-4 players score points by placing tiles on the board.</p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="../static/letter C.jpg" class="card-img-top" alt="letter c" style = "background-color: papayawhip;">
+        <div class="card-body">
+            <h5 class="card-title">Crossword</h5>
+            <p class="card-text">Words have to be formed by tiles in a crossword fashion, either from left to right in rows or downwards in columns.</p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="../static/letter R.jpg" class="card-img-top" alt="letter r"  style = "background-color: papayawhip;">
+        <div class="card-body">
+            <h5 class="card-title">Reputable</h5>
+            <p class="card-text">This game is sold in 121 countries and is available in over 30 langauges, this includes Braille and magnetic versions.</p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="../static/letter A.jpg" class="card-img-top" alt="letter a" style = "background-color: papayawhip;">
+        <div class="card-body">
+            <h5 class="card-title">Ageless</h5>
+            <p class="card-text">Since the invention from 1938, till this day, Scrabble still remains well-liked by players of all ages.<br> 
+            Each year, the North American SCRABBLE Players Association (NASPA) hosts a National SCRABBLE Championship in a major U.S. city. <br>
+            The tournament attracts more than 500 highly-skilled and competitive adult SCRABBLE players who compete in 31 rounds of one-on-one play over a five day period.</p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="../static/letter B.jpg" class="card-img-top" alt="letter b" style = "background-color: papayawhip;">
+        <div class="card-body">
+            <h5 class="card-title">Board</h5>
+            <p class="card-text">The board consists of 15 x 15 grid of squares where tiles are placed to form words. </p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="../static/letter B.jpg" class="card-img-top" alt="letter b" style = "background-color: papayawhip;">
+        <div class="card-body">
+            <h5 class="card-title">Butts, Brunot, Britain</h5>
+            <p class="card-text">This board game was initially invented by Alfred Mosher Butts in 1938, redesigned and marketed by James Brunot in 1948. The game was first sold in Great Britain in 1954. </p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="../static/letter L.jpg" class="card-img-top" alt="letter l" style = "background-color: papayawhip;">
+        <div class="card-body">
+            <h5 class="card-title">Lexicon</h5>
+            <p class="card-text">Acceptable words to be used in the Scrabble game are referenced from a standard dictionary or lexicon. Two popular competition word lists include NASPA Word List and Collins Scrabble Words.</p>
+        </div>
+    </div>
+    <div class="card">
+        <img src="../static/letter E.jpg" class="card-img-top" alt="letter e" style = "background-color: papayawhip;">
+        <div class="card-body">
+            <h5 class="card-title">Educational</h5>
+            <p class="card-text">Scrabble helps to broaden one's vocabulary, builds intellectual capacity, enhances memory functionality and concentration skills. </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
