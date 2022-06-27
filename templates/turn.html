@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Play a word
+{% endblock %}
+
+{% block main %}
+    <div class="board">
+        <h3>Game board:</h3>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td></td>
+                    {% for i in range(15) %}
+                        <td>{{i}}</td>
+                    {% endfor %}
+                </tr>
+            
+                {% for row in board %}
+                    <tr>
+                        <td>{{ board.index(row) }}</td>
+                        {% for col in row %}
+                            <td>{{col}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h4>{{ player.get_name() }}'s Rack:</h4>
+        <p>{{ rack.get_rack_str() }}</p>
+    </div>
+    <form action="/turn" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="word" placeholder="Enter word to be played" type="text">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control" name="row" placeholder="Enter row number" type="number">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control" name="col" placeholder="Enter column number" type="number">
+        </div>
+        <select class="form-select" name="direction" aria-label="Direction">
+            <option selected>Choose direction to play word</option>
+            <option value="down">Down</option>
+            <option value="right">Right</option>
+        </select>
+        <br />
+        <button class="btn btn-primary" type="submit">Play Word</button>
+    </form>
+{% endblock %}

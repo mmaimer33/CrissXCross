@@ -2,7 +2,7 @@ import enum
 from random import shuffle
 import numpy
 
-from Values import *
+from scrabble.Values import *
 
 class Tile:
     """Represents a tile. Contains a letter and a score based on the global LETTER_SCORES."""
@@ -65,7 +65,7 @@ class Rack:
 
     # Refills rack to 7 tiles, unless bag is empty. Called upon creation also.
     def replenish_rack(self):
-        while len(self.rack) <= 7 and self.bag.get_remaining_tiles > 0:
+        while len(self.rack) <= 7 and self.bag.get_remaining_tiles() > 0:
             self.add_tile_to_rack()
     
     # Removes a given tile from the array if it exists.
@@ -74,7 +74,7 @@ class Rack:
         
     # Returns the string representaions of each tile on the rack, separated by a ', '.
     def get_rack_str(self):
-        return ", ".join(str(tile.get_letter() for tile in self.rack))
+        return ", ".join(tile.get_letter() for tile in self.rack)
     
     # Returns the number of tiles on the rack
     def rack_length(self):
@@ -145,7 +145,7 @@ class Board:
                 board[i] = str(i) + " | " + " | ".join(str(item) for item in board[i]) + " |"
         board_str += "\n   |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n".join(board)
         board_str += "\n   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _"
-        print(board_str)
+        return board_str
 
     # Places a validated word on the board.
     def place_word(self, word: str, location: list, direction: Direction, player: Player):
@@ -188,10 +188,6 @@ class Word:
         existing_tiles = ""
         required_tiles = ""
 
-        # Ensures that the dictionary exists.
-        if not DICTIONARY:
-            read_dict()
-
         # Check word out of bounds.
         if not (0 <= self.location[0] < BOARD_SIZE - 1 and 0 <= self.location[1] < BOARD_SIZE - 1):
             return scrabble_error("Word out of bounds")
@@ -212,13 +208,13 @@ class Word:
         availables = [" ", "DLS", "DWS", "TLS", "TWS", " * ", "*"]
         if self.direction == Direction.right:
             for i in range(n):
-                if self.board[self.location[0]][self.location[1] + i] in availables:
+                if self.board.board[self.location[0]][self.location[1] + i] in availables:
                     existing_tiles += " "
                 else:
-                    existing_tiles += self.board[self.location[0]][self.location[1] + i][1]
+                    existing_tiles += self.board.board[self.location[0]][self.location[1] + i][1]
         elif self.direction == Direction.down:
             for i in range(n):
-                if self.board[self.location[0] + i][self.location[1]] in availables:
+                if self.board.board[self.location[0] + i][self.location[1]] in availables:
                     existing_tiles += " "
                 else:
                     existing_tiles += self.board[self.location[0] + i][self.location[1]][1]
@@ -292,17 +288,20 @@ class Game:
 
     # Starts the game, keeping track of rounds played and skipped, and whether the game is over.
     def start_game(self):
+        global round_number, skipped
         self.round_number = 0
         self.skipped = 0
         self.game_over = False
-        self.current_player = self.players[0]
+        self.current_player: Player = self.players[0]
+        round_number = self.round_number
+        skipped = self.skipped
     
     # Performs a play, checking for game details and valididty of the word.
     def turn(self, word_in: str, location: list, direction: Direction):
         if self.bag.get_remaining_tiles() == 0 and self.current_player.rack.rack_length() == 0:
             return self.end_game()
         
-        word = Word(word_in, self.board, location, direction)
+        word = Word(word_in, self.board, location, direction, self.current_player)
         checked = word.check_word()
         if not checked:
             return scrabble_error("Invalid word.")
@@ -332,10 +331,6 @@ class Game:
                 winner = player.get_name()
         
         return (winner, win_score)
-
-def read_dict():
-    global DICTIONARY
-    DICTIONARY = numpy.loadtxt("word_list.txt", dtype='str')
 
 def scrabble_error(msg: str):
     # TODO

@@ -1,4 +1,3 @@
-from re import sub
 from cs50 import SQL
 from flask import Flask, redirect, render_template, request, session
 from flask_mail import Mail, Message
@@ -8,8 +7,8 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import *
-# from scrabble.Classes_old import *
-# from scrabble.Values import *
+from scrabble.Classes import *
+from scrabble.Values import *
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -142,6 +141,54 @@ def logout():
     session.clear()
     return redirect("/main")
 
+@app.route("/game", methods=["GET", "POST"])
+def game():
+    global new_game
+    if request.method == "POST":
+        # Ensure both names were submitted
+        if not request.form.get("player1") or not request.form.get("player2"):
+            return errorify("must provide names for both players", "", 403)
+        
+        # Create new game with players
+        new_game = Game()
+        players = [request.form.get("player1"), request.form.get("player2")]
+        new_game.set_players(players)
+        new_game.start_game()
+        return redirect("/turn")
+    else:
+        return render_template("game.html")
+    
+@app.route("/turn", methods=["GET", "POST"])
+def turn():
+    if new_game.game_over:
+        return render_template("game-over.html", winner=new_game.end_game())
+
+    if request.method == "POST":
+        word_in = request.form.get("word")
+        row_in = request.form.get("row")
+        col_in = request.form.get("col")
+        direction_in = request.form.get("direction")
+
+        # Ensure word exists
+        if not word_in:
+            return errorify("word not provided", "", 403)
+        
+        # Check row and col numbers
+        if not 0 <= int(row_in) < BOARD_SIZE or not 0 <= int(col_in) < BOARD_SIZE:
+            return errorify("row or column number invalid", "", 403)
+        
+        # Check direction
+        if not direction_in:
+            return errorify("direction not chosen", "", 403)
+        else:
+            direction_in = Direction.down if direction_in == "down" else Direction.right
+        
+        new_game.turn(word_in, [int(row_in), int(col_in)], direction_in)
+        return render_template("turn.html", board=new_game.board.board, player=new_game.current_player, rack=new_game.current_player.rack)
+        
+    else:
+        return render_template("turn.html", board=new_game.board.board, player=new_game.current_player, rack=new_game.current_player.rack)
+
 @app.route("/test")
 def test():
     return render_template("test.html")
@@ -157,10 +204,6 @@ def whatisscrabble():
 @app.route("/gameplay-tutorial")
 def gameplaytutorial():
     return render_template("gameplay-tutorial.html")
-
-@app.route("/multiplayer-gameplay")
-def multiplayergameplay():
-    return render_template("multiplayer-gameplay.html")
 
 @app.route("/wordoftheday")
 def wordoftheday():

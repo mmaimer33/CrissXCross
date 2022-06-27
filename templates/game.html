@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Game
+{% endblock %}
+
+{% block main %}
+    <form action="/game" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="player1" placeholder="Player 1 name" type="text">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control" name="player2" placeholder="Player 2 name" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Start Game</button>
+    </form>
+{% endblock %}
