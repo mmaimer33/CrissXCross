@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block head %}
+    <link href="index.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block title %}
 Main 
 {% endblock %}
@@ -44,70 +48,63 @@ Main
     /* .btn {
         font-size: 1.5vw;
     } */
-    
 </style>
 {% endblock %}
 
 {% block body %}
-{% if session.user_id %}
-<p style = "float: right;">Hello, {{username}}</p>
-{% else %}
-<h2><strong> Hello! I am a : </strong></h2>
-{% endif %}
-<br></br>
+    {% if session.user_id %}
+    <p style = "float: right;">Hello, {{username}}</p>
+    {% else %}
+    <h2><strong> Hello! I am a : </strong></h2>
+    {% endif %}
+    <br></br>
 
-<div class="container">
-    <div class="row row-cols-2">
-        <div class="col">
-            <div class="card border-info mb-3 text-center" style="width: 30rem;">
-                <h5 class="card-header">New User</h5>
-                <img src="../static/stickman.png" class="card-img-top" alt="new-user-stickman">
-                <div class="card-body">
-                    <h5 class="card-title"> Click on the start button below to begin your journey!</h5>
-                    <button type = "button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Start</button>
+    <div class="container">
+        <div class="row row-cols-2">
+            <div class="col">
+                <div class="card border-info mb-3 text-center" style="width: 30rem;">
+                    <h5 class="card-header">New User</h5>
+                    <img src="../static/stickman.png" class="card-img-top" alt="new-user-stickman">
+                    <div class="card-body">
+                        <h5 class="card-title"> Click on the start button below to begin your journey!</h5>
+                        <button type = "button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Start</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card border-info mb-3 text-center" style="width: 30rem;">
-                <h5 class="card-header">Existing User</h5>
-                <img src="../static/stickmanshake.png" class="card-img-top shift-up" alt="existing-user-stickman">
-                <div class="card-body">
-                    <h5 class="card-title">Welcome back! Click on the button below to login to your existing account.</h5>
-                    <a href="/login"" class="btn btn-primary btn-lg">Login</a>
-                </div>
-            </div> 
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">For new users:</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            We recommend you to register for an account below to save all progressions/achievements in game! 
-            <br>Otherwise, you can continue as a guest!
-            <br>Check out <a href = "/gameplay-tutorial" target ="_blank">the gameplay</a> here if needed 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a href = "#" class="btn btn-primary">Continue as Guest</a>
-                <a href = "/register" class="btn btn-primary">Register an account</a>
+            <div class="col">
+                <div class="card border-info mb-3 text-center" style="width: 30rem;">
+                    <h5 class="card-header">Existing User</h5>
+                    <img src="../static/stickmanshake.png" class="card-img-top shift-up" alt="existing-user-stickman">
+                    <div class="card-body">
+                        <h5 class="card-title">Welcome back! Click on the button below to login to your existing account.</h5>
+                        <a href="/login" class="btn btn-primary btn-lg">Login</a>
+                    </div>
+                </div> 
             </div>
         </div>
     </div>
-</div>
 
-
-
-
-
-
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">For new users:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                We recommend you to register for an account below to save all progressions/achievements in game! 
+                <br>Otherwise, you can continue as a guest!
+                <br>Check out <a href = "/gameplay-tutorial" target ="_blank">the gameplay</a> here if needed 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href = "#" class="btn btn-primary">Continue as Guest</a>
+                    <a href = "/register" class="btn btn-primary">Register an account</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 
