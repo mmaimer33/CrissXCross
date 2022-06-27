@@ -1,0 +1,38 @@
+h2 {
+    text-align: center;
+    margin-top: 2%;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; 
+}
+.container {
+    margin-left: 20%;
+}
+.card-header{
+    background-color: papayawhip;
+    text-align: center;
+    font-size: 1.5vw;
+    font-weight: bold;
+    /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;  */
+}
+.card-body {
+    background-color: papayawhip;
+}
+.shift-up{
+    margin-top: 3%;
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+img {
+    animation-delay: -2s;
+    animation: fadeInAnimation 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;  
+}
+/* .btn {
+    font-size: 1.5vw;
+} */
