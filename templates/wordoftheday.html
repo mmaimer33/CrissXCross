@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+<!--Word of the Day by TheFreeDictionary.com-->
+<div style="width:50%;position:relative;background-color:papayawhip;padding:4px;text-align: center;margin-left: 25%;margin-top: 5%;">
+    <div style="font:bold 12pt '';color:#000000; font-size: 2vw;">Word of the Day</div>
+    <style>
+    #WordOfTheDay {width:100%;border:1px #AFAFAF solid;background-color:aquamarine}
+    #WordOfTheDay H3 {font:bold 12pt '';color:#000000;font-size: 2vw;}
+    #WordOfTheDay TD.WoDLeft {font:bold 10pt '';color:#000000;font-size: 1vw;}
+    #WordOfTheDay TD {font:normal 10pt '';color:#000000;font-size: 1vw;}
+    #WordOfTheDay A {color:#0000FF}
+    </style>
+    <div id="tfd_wod_div" style = "font-size: 2vw;"><table id="WordOfTheDay">
+    <tr><td colspan="2" align="center"><h3 style="margin-bottom:3pt">
+    <a href="https://www.thefreedictionary.com/azure" target="_blank" rel="nofollow">azure</a></h3></td></tr>
+    <tr><td class="WoDLeft" valign="top" align="right">Definition:</td>
+    <td align="left">A light purplish blue.</td></tr>
+    <tr><td class="WoDLeft" valign="top">Synonyms:</td><td>
+    <a href="https://www.freethesaurus.com/cerulean" rel="nofollow">cerulean</a>, 
+    <a href="https://www.freethesaurus.com/lazuline" rel="nofollow">lazuline</a>, 
+    <a href="https://www.freethesaurus.com/sapphire" rel="nofollow">sapphire</a>, 
+    <a href="https://www.freethesaurus.com/sky-blue" rel="nofollow">sky-blue</a>
+    </td></tr></table></div>
+    <script type="text/javascript">document.getElementById("tfd_wod_div").style.visibility="hidden"</script>
+    <script type="text/javascript" async src="//img.tfd.com/daily/wod-top.js" charset="UTF-8"></script>
+    <div style="font:normal 8pt '';color:#000000">
+    <a style="color:#000000" href="https://www.thefreedictionary.com/lookup.htm#Word-of-the-Day" rel="nofollow">Word of the Day</a>
+    provided by <a style="color:#000000" href="https://www.thefreedictionary.com/" rel="nofollow">TheFreeDictionary.com</a>
+    </div>
+</div>
+
+    <!--end of Word of the Day-->
+    {% endblock %}

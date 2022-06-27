@@ -1,7 +1,7 @@
 from flask import redirect, render_template, session
 from functools import wraps
 
-def errorify(message, code=400):
+def errorify(message, error, code=400):
     """Render message as an apology to user."""
     def escape(s):
         """
@@ -9,11 +9,15 @@ def errorify(message, code=400):
 
         https://github.com/jacebrowning/memegen#special-characters
         """
-        for old, new in [("-", "--"), (" ", "-"), ("_", "__"), ("?", "~q"),
+        for old, new in [("-", "--"), ("_", "__"), ("?", "~q"),
                          ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
             s = s.replace(old, new)
         return s
-    return render_template("error.html", top=code, bottom=escape(message)), code
+    if error == "invalidlogin" :
+        return render_template("login.html", top=code, alertmsg=escape(message)) # im not sure if this messes it up by rendering login.html
+    else : 
+        return render_template("register.html", top=code, alertmsg=escape(message))
+    
 
 def login_required(f):
     """

@@ -4,6 +4,10 @@
     Register
 {% endblock %}
 
+{% block body %}
+    <h2 style = "text-align: center; margin-top: 2%;"><mark>Register Page</mark></h2>
+{% endblock %}
+
 {% block main %}
     <form action="/register" method="post">
         <div class="form-group">
@@ -21,4 +25,10 @@
     <div class="text-center text-muted">
         The password must have at least 6 characters and at least one number
     </div>
+    <br>
+    {% if alertmsg %}
+    <div class="alert alert-danger" role="alert">
+        Invalid input, {{alertmsg}}. Please try again.
+    </div>
+    {% endif %}
 {% endblock %}

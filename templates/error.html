@@ -4,6 +4,27 @@
     Error
 {% endblock %}
 
+{% block head %}
+<!-- <script>
+    
+        alert('{{alertmsg | tojson}}', 'danger')
+    
+</script> -->
+{% endblock %}
+
+{% block body%}
+{% endblock %}
+
 {% block main %}
     <img alt="{{ top }}" class="border" src="../static/error-cat.jpeg" title="{{ top }}">
+    {% if alertmsg %}
+    <h2>hello memes</h2>
+    {% else %}
+    <h2>there is no error</h2> 
+    {% endif %}
+
 {% endblock %}
+
+
+
+
