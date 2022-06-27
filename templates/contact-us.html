@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Contact Us
+{% endblock %}
+
+{% block style %}
+
+{% endblock %}
+{% block body %}
+<h2 style = "text-align: center; margin-top: 2%;"><mark>Feedback Form</mark></h2>
+<div class = "text-center text-muted"> We would love to hear any of your thoughts or concerns so we can improve!</div>
+{% endblock %}
+
+{% block main %}
+
+<form action ="/contact-us" method = "POST" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Full name:</label>
+        <input type="text" class="form-control" placeholder="John Smith" name = "full_name" aria-label="Full name" required>
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Username:</label>
+        <input type="text" class="form-control" placeholder="@username" name = "username" aria-label="Username" required>
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Email address:</label>
+        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" name = "email" required>
+    </div>
+    <div class = "mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Subject regarding:</label>
+    </div>
+    
+    <div class="form-check form-check-inline">
+        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio1" value="Comments">
+        <label class="form-check-label" for="inlineRadio1">Comments</label>
+    </div>
+    <div class="form-check form-check-inline">
+    <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio2" value="Questions">
+        <label class="form-check-label" for="inlineRadio2">Questions</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio3" value="Bug Report">
+        <label class="form-check-label" for="inlineRadio3">Bug Report</label>
+    </div>  
+    <div class="form-check form-check-inline">
+        <input class="form-check-input-2" type="radio" name="subject" id="inlineRadio3" value="Others">
+        <label class="form-check-label" for="inlineRadio3">Others</label>
+    </div>  
+    <div class="mb-3">
+        <br>
+        <label for="exampleFormControlTextarea1" class="form-label">What would you like to tell us?</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "feedback"></textarea>
+    </div>  
+    <div class="mb-3">
+        <br>
+        <label for="formFile" class="form-label">Attach any relevant files:</label>
+        <input class="form-control" type="file" id="formFile" name = "uploaded_file">
+    </div>
+    <br>
+    <button class="btn btn-primary" type="submit">Submit Feedback</button> 
+</form>
+
+
+
+{% endblock %}

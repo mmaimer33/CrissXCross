@@ -4,6 +4,10 @@
     Log In
 {% endblock %}
 
+{% block body %}
+    <h2 style = "text-align: center; margin-top: 2%;"><mark>Login Page</mark></h2>
+{% endblock %}
+
 {% block main %}
     <form action="/login" method="post">
         <div class="form-group">
@@ -15,4 +19,10 @@
         <button class="btn btn-primary" type="submit">Log In</button>
         <a href="/register"><button class="btn" type="button">No account? Create one.</button></a>
     </form>
+    <br>
+    {% if alertmsg %}
+    <div class="alert alert-danger" role="alert">
+        Invalid input, {{alertmsg}}. Please try again.
+    </div>
+    {% endif %}
 {% endblock %}
