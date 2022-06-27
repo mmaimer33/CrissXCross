@@ -8,8 +8,8 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import *
-from scrabble.Classes import *
-from scrabble.Values import *
+# from scrabble.Classes_old import *
+# from scrabble.Values import *
 
 from dotenv import load_dotenv
 load_dotenv()
