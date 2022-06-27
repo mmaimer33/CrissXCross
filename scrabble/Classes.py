@@ -76,6 +76,10 @@ class Rack:
     def get_rack_str(self):
         return ", ".join(str(tile.get_letter() for tile in self.rack))
     
+    # Returns the number of tiles on the rack
+    def rack_length(self):
+        return len(self.rack)
+
     # Returns the list that stores the rack
     def get_rack_ls(self):
         return self.rack
@@ -178,8 +182,11 @@ class Word:
         self.player = player
 
     # Checks if a submitted word can be played.
-    def check_word(self):
+    def check_word(self, blank_letter=None):
         global round_number, players
+        n = len(self.word)
+        existing_tiles = ""
+        required_tiles = ""
 
         # Ensures that the dictionary exists.
         if not DICTIONARY:
@@ -188,14 +195,53 @@ class Word:
         # Check word out of bounds.
         if not (0 <= self.location[0] < BOARD_SIZE - 1 and 0 <= self.location[1] < BOARD_SIZE - 1):
             return scrabble_error("Word out of bounds")
-        if self.direction == Direction.down and (self.location[0] + len(self.word) - 1 > BOARD_SIZE - 1):
+        if self.direction == Direction.down and (self.location[0] + n - 1 > BOARD_SIZE - 1):
             return scrabble_error("Word out of bounds")
-        elif self.direction == Direction.right and (self.location[1] + len(self.word) - 1 > BOARD_SIZE - 1):
+        elif self.direction == Direction.right and (self.location[1] + n - 1 > BOARD_SIZE - 1):
             return scrabble_error("Word out of bounds")
         
         # Check location if play is first play.
         if round_number == 1 and players[0] == self.player and self.location != [7, 7]:
             return scrabble_error("Play first word at star (*) symbol, location 7, 7.")
+        
+        # Check for blank tile and constructs the word appropriately.
+        if blank_letter is not None:
+            self.word = self.word[:self.word.index("#")] + blank_letter.upper() + self.word[(self.word.index("#") + 1):]
+        
+        # Gets existing tiles in the location and direction.
+        availables = [" ", "DLS", "DWS", "TLS", "TWS", " * ", "*"]
+        if self.direction == Direction.right:
+            for i in range(n):
+                if self.board[self.location[0]][self.location[1] + i] in availables:
+                    existing_tiles += " "
+                else:
+                    existing_tiles += self.board[self.location[0]][self.location[1] + i][1]
+        elif self.direction == Direction.down:
+            for i in range(n):
+                if self.board[self.location[0] + i][self.location[1]] in availables:
+                    existing_tiles += " "
+                else:
+                    existing_tiles += self.board[self.location[0] + i][self.location[1]][1]
+        
+        # Check overlap is correct.
+        for i in range(n):
+            if existing_tiles[i] == " ":
+                required_tiles += self.word[i]
+            elif existing_tiles[i] != self.word[i]:
+                return scrabble_error("Overlap incorrect.")
+        
+        # Check word is connected to other tiles.
+        if (round_number != 1 or (round_number == 1 and players[0] != self.player)) and existing_tiles == " " * n:
+            return scrabble_error("Word must connect to other tiles.")
+        
+        # Ensure word is in dictionary.
+        if self.word not in DICTIONARY:
+            return scrabble_error("You must enter a valid word.")
+        
+        # # Check connecting words.
+        # top_start = None
+        # while top_start not in availables:
+        #     pass
 
     # Calculates and returns the score attained by playing the word
     def calculate_word_score(self):
@@ -229,13 +275,67 @@ class Word:
     def get_word(self):
         return self.word
 
+class Game:
+    """Represents a game, creating a bag, board, players and related."""
+
+    def __init__(self) -> None:
+        self.board = Board()
+        self.bag = Bag()
+        self.players = []
+    
+    def set_players(self, names: list):
+        num_players = 0
+        for name in names:
+            self.players.append(Player(name, self.bag))
+            num_players += 1
+        self.num_players = num_players
+
+    # Starts the game, keeping track of rounds played and skipped, and whether the game is over.
+    def start_game(self):
+        self.round_number = 0
+        self.skipped = 0
+        self.game_over = False
+        self.current_player = self.players[0]
+    
+    # Performs a play, checking for game details and valididty of the word.
+    def turn(self, word_in: str, location: list, direction: Direction):
+        if self.bag.get_remaining_tiles() == 0 and self.current_player.rack.rack_length() == 0:
+            return self.end_game()
+        
+        word = Word(word_in, self.board, location, direction)
+        checked = word.check_word()
+        if not checked:
+            return scrabble_error("Invalid word.")
+        
+        self.board.place_word(word_in, location, direction, self.current_player)
+        self.current_player.increase_score(word.calculate_word_score())
+        
+        curr_index = self.players.index(self.current_player)
+        if curr_index == self.num_players - 1:
+            self.current_player = self.players[0]
+        else:
+            self.current_player = self.players[curr_index + 1]
+        
+        self.round_number += 1
+
+    def skip_turn(self):
+        self.skipped += 1
+
+    # Ends the game.
+    def end_game(self):
+        self.game_over = True
+        win_score = 0
+        winner = ""
+        for player in self.players:
+            if player.get_score() > win_score:
+                win_score = player.get_score()
+                winner = player.get_name()
+        
+        return (winner, win_score)
+
 def read_dict():
     global DICTIONARY
     DICTIONARY = numpy.loadtxt("word_list.txt", dtype='str')
-
-def skip_turn():
-    # TODO
-    pass
 
 def scrabble_error(msg: str):
     # TODO
