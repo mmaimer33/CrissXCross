@@ -191,7 +191,7 @@ def turn():
 
 @app.route("/test")
 def test():
-    return render_template("test.html")
+    return render_template("game-over.html", winner=["Denzel", 83])
 
 @app.route("/why-crissxcross")
 def whycrissxcross():
